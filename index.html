@@ -4,11 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather Globe</title>
+    <!-- React and Babel Libraries via CDN -->
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com"></script>
+    
     <link rel="stylesheet" href="/weather-globe/index.css" />
     <link rel="stylesheet" href="/weather-globe/App.css" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/weather-globe/main.jsx"></script>
+    <!-- Babel allows the browser to read JSX on the fly -->
+    <script type="text/babel" src="/weather-globe/main.jsx"></script>
   </body>
 </html>
