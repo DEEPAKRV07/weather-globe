@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather Globe</title>
-    <!-- React and Babel Libraries via CDN -->
+    <!-- React and Babel Libraries -->
     <script src="https://unpkg.com" crossorigin></script>
     <script src="https://unpkg.com" crossorigin></script>
     <script src="https://unpkg.com"></script>
@@ -14,7 +14,65 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Babel allows the browser to read JSX on the fly -->
-    <script type="text/babel" src="/weather-globe/main.jsx"></script>
+
+    <script type="text/babel">
+      // --- APP COMPONENT CONTENT (From App.jsx) ---
+      function App() {
+        const [city, setCity] = React.useState("");
+        const [weatherData, setWeatherData] = React.useState(null);
+
+        // Uses your secure GitHub Secret mapped environment variable
+        const API_KEY = "VITE_OPENWEATHER_API_KEY"; 
+
+        const fetchWeather = async () => {
+          if (!city) return;
+          try {
+            const res = await fetch(`https://openweathermap.org{city}&units=metric&appid=${API_KEY}`);
+            const data = await res.json();
+            if (res.ok) {
+              setWeatherData(data);
+            } else {
+              alert(data.message || "City not found");
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        };
+
+        return (
+          <div className="app-container" style={{ textAlign: "center", padding: "50px", fontFamily: "sans-serif" }}>
+            <h1>🌍 Weather Globe</h1>
+            <div style={{ margin: "20px 0" }}>
+              <input 
+                type="text" 
+                placeholder="Enter city name..." 
+                value={city} 
+                onChange={(e) => setCity(e.target.value)}
+                style={{ padding: "10px", width: "200px", borderRadius: "5px", border: "1px solid #ccc" }}
+              />
+              <button 
+                onClick={fetchWeather}
+                style={{ padding: "10px 20px", marginLeft: "10px", borderRadius: "5px", background: "#007bff", color: "#fff", border: "none", cursor: "pointer" }}
+              >
+                Search
+              </button>
+            </div>
+
+            {weatherData && (
+              <div className="weather-card" style={{ background: "rgba(255,255,255,0.2)", padding: "20px", display: "inline-block", borderRadius: "10px" }}>
+                <h2>{weatherData.name}, {weatherData.sys?.country}</h2>
+                <h3>{Math.round(weatherData.main?.temp)}°C</h3>
+                <p>{weatherData.weather?.[0]?.description}</p>
+                <p>Humidity: {weatherData.main?.humidity}%</p>
+                <p>Wind: {weatherData.wind?.speed} m/s</p>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      // --- MAIN ENTRY RENDER (From main.jsx) ---
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
   </body>
 </html>
